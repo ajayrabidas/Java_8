@@ -12,7 +12,7 @@ import java.util.List;
  * printing persons first name beginning with C
  * All in Java 7 style 
  * */
-public class Unit1ExerciseJava7Way {
+public class Unit1ExerciseJava8Way {
 
 	public static void main(String[] args) {
 
@@ -25,31 +25,53 @@ public class Unit1ExerciseJava7Way {
 			new Person("Mathew", "Arnold", 39)
 		);		
 		
+/*		
 //		Step 1: Sort list by last name
 		Collections.sort(people, new Comparator<Person>(){
 			@Override
 			public int compare(Person o1, Person o2) {
+				System.out.println(this); // can be used here since it is in the not in main but in different context
 				return o1.getLastName().compareTo(o2.getLastName());
 		}
 			}
 				);
+*/		
+		
+//		Java 8 Way
+		Comparator<Person> lambdaCompare = (Person p1 , Person p2) -> p1.getLastName().compareTo(p2.getLastName());
+		Collections.sort(people, lambdaCompare);
 		
 //		Step 2: Create a method that prints all the elements in the list
+		System.out.println("using lambda expression");
 		printAll(people);
+	
+//		Step 3: Create a method that prints all names that have last name starting with C
+		System.out.println("with last name starting with C");
 		printPersonWithLastNameC(people);
 		
-//		Step 3: Create a method that prints all names that have last name starting with C, passing the condition as well	
-		System.out.println("Printing names conditionally, last name starting with C");
-		printNameConditionally(people, new Condition(){
-			@Override
-			public boolean test(Person p) {
-				return p.getLastName().startsWith("C");
-			}
-			
-		}
-		);
-	}
+		Collections.sort(people, (Person p1 , Person p2) -> p1.getLastName().compareTo(p2.getLastName()));
+		
+		System.out.println("Based on name");
+		people.forEach(p-> System.out.println(p));
+		
+		
+		
+//		sort based on age
+		Collections.sort(people, (Person p1 , Person p2) -> {
+//			System.out.println(this); // cannot be used here since it is in the main context
+			if(p1.getAge() < p2.getAge() ){
+				return -1;
+			}else if(p1.getAge() == p2.getAge()){
+				return 0;
+			} return 1;
+		});
+		System.out.println("Based on age");
+		people.forEach(p-> System.out.println(p));
 	
+	
+	} //main ends here
+	
+		
 //	Step 3: Create a method that prints all names that have last name starting with C
 	public static void printPersonWithLastNameC(List<Person> people) {
 		for (Person person : people) {
@@ -64,21 +86,5 @@ public class Unit1ExerciseJava7Way {
 			System.out.println(person);
 		}
 	}
-	
-//	Step 3: Create a method that prints all names that have last name starting with C, passing the condition as well
-	public static void printNameConditionally(List<Person> people, Condition c) {
-		for(Person p : people ){
-			if(c.test(p)){
-				System.out.println(p);
-			}
-		}
-	}
-	
-interface Condition{
-	boolean test(Person p);
-}
-
-
-
 
 }
